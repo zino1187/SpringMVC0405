@@ -1,11 +1,13 @@
 package com.itbank.model.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.itbank.exception.DeleteFailException;
 import com.itbank.exception.EditFailException;
@@ -19,6 +21,18 @@ public class BoardServiceImpl implements BoardService{
 	@Qualifier("mybatisBoardDAO")
 	private BoardDAO boardDAO;
 
+	public void save(MultipartFile multipartFile, String path){
+		String filename=multipartFile.getOriginalFilename();
+		try {
+			multipartFile.transferTo(new File(path+"/"+filename));
+			System.out.println(path+"/"+filename);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int insert(Board board) throws RegistFailException{
 		int result=0;
 		result=boardDAO.insert(board);

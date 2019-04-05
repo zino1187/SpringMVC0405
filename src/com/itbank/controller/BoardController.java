@@ -1,11 +1,16 @@
 package com.itbank.controller;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 //어제까지는 Controller 인터페이스를 구현해서 컨트롤러를 정의했지만,
 //오늘은 POJO 기반으로 컨트롤러를 정의해본다!!!
@@ -14,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.itbank.exception.RegistFailException;
 import com.itbank.model.domain.Board;
+import com.itbank.model.domain.FileBean;
 import com.itbank.model.service.BoardService;
 
 //scan하여 생성의 대상이 된다!!!
@@ -25,6 +31,14 @@ public class BoardController {
 	@RequestMapping("/test")
 	public String test() {
 		System.out.println("스프링 MVC 세팅 성공!!!");
+		return null;
+	}
+	
+	@RequestMapping(value="/upload", method=RequestMethod.POST)
+	public String regist(FileBean fileBean, HttpServletRequest request) {
+		System.out.println("스프링 MVC 세팅 성공!!!");
+		String realPath=request.getServletContext().getRealPath("/data");
+		boardService.save(fileBean.getMyFile(), realPath);
 		return null;
 	}
 	
