@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	<!-- 개발자가 명시하지 않아도 이미 디폴트로 적용되는 핸들러 매핑이 있다
+		BeanNameUrlHandlerMapping, 
+		DefaultAnnotationHandlerMapping
+	 -->
+	
+	<!-- 자동주입인 Autowired를 위한 설정 -->
+	<!-- <context:annotation-config/>	 -->
+	
+	<!-- 스프링의 컴포넌트란? 자동 생성의 대상이 되는 객체 
+		@Repository
+		@Service 
+		@Controller 
+		@Component
+		@Configuration
+	 -->
+	<context:component-scan base-package="com.itbank"/>
+		 
+	<bean id="viewResolver" 
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/"
+		p:suffix=".jsp"/>
+	
+	<jee:jndi-lookup 
+		id="dataSource"
+		jndi-name="jdbc/myoracle"
+		resource-ref="true"/>	
+	
+	<bean id="transactionManager" 
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSource"/>		
+	
+	<!-- 스프링이 지원하는 JDBC -->	
+	<bean id="jdbcTemplate" 
+		class="org.springframework.jdbc.core.JdbcTemplate"
+		p:dataSource-ref="dataSource"/>
+	
+	<!-- Mybatis  -->
+	<bean id="sqlSessionFactoryBean" 
+		class="org.mybatis.spring.SqlSessionFactoryBean"
+		p:dataSource-ref="dataSource"
+		p:configLocation="classpath:com/itbank/mybatis/config/mybatis-config.xml"/>
+	
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactoryBean"/>	
+	</bean>					
+			
+</beans>
+
+
+
+
+
+
+
+
+
